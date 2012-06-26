@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Megalist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="../lib/jquery-1.7.1.js"></script>
+    <script src="../src/megalist.js"></script>
+    <link href="../src/megalist.css" rel="stylesheet" type="text/css" >
+    
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
+    <script src="../lib/google-code-prettify/prettify.js"></script>
+      
+    <script>
+        $(document).ready( function() {
+            $('#myList2').megalist();
+            $('#myList2').megalist('setDataProvider', createDataProvider() );
+            $('#myList2').megalist('setLabelFunction', listItemLabelFunction );
+            $('#myList2').on('change', listChangeHandler);
+        });
+
+        function listChangeHandler( event ) { 
+            var message =   "selected index: " + event.selectedIndex + "\n" + 
+                            "selected item: " + event.srcElement.get()[0].outerHTML   ;
+            alert( message ); 
+        }
+        
+        function createDataProvider() {
+            var result = [];
+            for ( var x=0; x<100000; x++ ) {
+                result.push(x);
+            }	
+            return result;
+        }
+        
+        function listItemLabelFunction( item ) {
+            return "Decimal: " + item.toString() + ", Hex: " + item.toString(16);
+        }
+        
+    </script>
+      
+  </head>
+
+  <body >
+
+      <h3>Specifying a Data Provider Array</h3>
+      <p>This list has <strong style="color:red">100,000</strong> items in the data provider array:</p>
+      <p><div class="megalist" id="myList2" ></div></p>
+      <p>First, declare the basic HTML container &lt;div&gt;, then create the list, then add a data provider array and optional label function.</p>
+      <h4>Markup</h4>
+      <pre class="prettyprint linenums">&lt;div class="megalist" id="myList2" &gt;&lt;/div&gt;</pre>
+      <h4>Script</h4>
+      <pre class="prettyprint linenums">function listChangeHandler( event ) { 
+    var message =   "selected index: " + event.selectedIndex + "\n" + 
+                    "selected item: " + event.srcElement.get()[0].outerHTML   ;
+    alert( message ); 
+}
+
+function createDataProvider() {
+    var result = [];
+    for ( var x=0; x<100000; x++ ) {
+        result.push(x);
+    }	
+    return result;
+}
+
+function listItemLabelFunction( item ) {
+    return "Decimal: " + item.toString() + ", Hex: " + item.toString(16);
+}
+
+$('#myList2').megalist()
+$('#myList2').megalist('setDataProvider', createDataProvider() )
+$('#myList2').megalist('setLabelFunction', listItemLabelFunction )
+$('#myList2').on('change', listChangeHandler)</pre>
+
+
+
+  </body>
+</html>
