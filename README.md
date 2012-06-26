@@ -11,8 +11,26 @@ There are two methods that the list component can be used.  One option is to dec
     
 ## Samples    
     
-View the "samples" directory to see the list component in action.    
-          
+View the "samples" directory to see the scrollable list component in action.  All samples are interactive, and scrollable via touch or mouse events, with function event handlers.
+
+Simple List Created With Inline LI elements
+<iframe src="http://triceam.github.com/MegaList/bin-notext/samples/01%20-%20simple%20inline%20data.html"></iframe>
+
+View Standalone: http://triceam.github.com/MegaList/bin/samples/01%20-%20simple%20inline%20data.html
+View Source: https://github.com/triceam/MegaList/blob/master/samples/01%20-%20simple%20inline%20data.html
+
+Simple List Created With A DataProvider of 100,000 items:
+<iframe src="http://triceam.github.com/MegaList/bin-notext/samples/02%20-%20simple%20dataprovider.html"></iframe>
+
+View Standalone: http://triceam.github.com/MegaList/bin/samples/02%20-%20simple%20dataprovider.html
+View Source: https://github.com/triceam/MegaList/blob/master/samples/02%20-%20simple%20dataprovider.html
+
+Styled Dynamic List Created With Remote Data:
+<iframe src="http://triceam.github.com/MegaList/bin-notext/samples/03%20-%20styled%20list.html"></iframe>
+
+View Standalone: http://triceam.github.com/MegaList/bin/samples/03%20-%20styled%20list.html
+View Source: https://github.com/triceam/MegaList/blob/master/samples/03%20-%20styled%20list.html
+      
 ## API   
 
 ### Methods       
