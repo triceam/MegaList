@@ -521,8 +521,7 @@
         else if ( i !== undefined ){
             var iString = i.toString();
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
-                item = $("<li/>");
-                item.addClass("megalistItem");
+                item = $("<li class='megalistItem' />");
                 this.listItems[ iString ] = item;
             }
             else {
