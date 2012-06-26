@@ -3,7 +3,7 @@ MegaList
 
 ## Introduction
 
-JavaScript touch-enabled list component, capable of very large datasets, with data virtualization.   It was originally intended for touch-enabled devices, however it also works in many desktop browsers.
+Megalist is a jQuery plugin that creates a touch-enabled list component, capable of very large datasets, complete with data virtualization.   It was originally intended for touch-enabled devices, however it also works in many desktop browsers.
 
 For performance optimizations, the list component uses data virtualization techniques, so there are never more list elements in the HTML DOM than what is currently visible on the screen. As the user scrolls through content, the list updates the DOM elements accordingly. This makes scrolling lists of thousands of items extremely fluid.
 
