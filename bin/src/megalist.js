@@ -133,7 +133,6 @@
     
     onTouchStart: function ( event ) {
         this.stopAnimation();
-        this.cleanupListItems(true);
         
         if ( this.touchSupported ) {
             this.$scrollbar.fadeTo( 300,1 );
