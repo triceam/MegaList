@@ -55,6 +55,7 @@
             if ( i === 0 ) {
                 self.itemHeight = $(this).outerHeight();
             }
+            $(this).addClass("megalistItem");
             $(this).remove();
         });
         
@@ -521,6 +522,7 @@
             var iString = i.toString();
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 item = $("<li/>");
+                item.addClass("megalistItem");
                 this.listItems[ iString ] = item;
             }
             else {
@@ -534,7 +536,6 @@
         }
         if ( item !== null && item !== undefined ) {
             item.attr( "list-index", i );
-            item.addClass("megalistItem");
         }
         return item;
     },
