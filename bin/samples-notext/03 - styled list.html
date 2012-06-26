@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Megalist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="../lib/jquery-1.7.1.js"></script>
+    <script src="../src/megalist.js"></script>
+    <link href="../src/megalist.css" rel="stylesheet" type="text/css" >
+    
+    <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
+    <script src="../lib/google-code-prettify/prettify.js"></script>
+      
+    <style>
+        /* gradients created using http://www.colorzilla.com/gradient-editor/ */
+    
+        
+        body {
+            width:100%;
+            height:100%;
+            padding:0px;
+            margin:0px;
+        }
+        
+        #tweets{
+            position:absolute;
+            top:0px;
+            left:0px;
+            bottom:0px; 
+            right:0px;
+            width:100%;
+            height:100%;
+        } 
+        .megalist li {
+            height:60px;
+            white-space: normal;
+            border-top:1px solid #999;
+        }
+        .megalistItem {
+            background: rgb(204,204,204); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(204,204,204,1) 0%, rgba(221,221,221,1) 15%, rgba(221,221,221,1) 60%, rgba(204,204,204,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(204,204,204,1)), color-stop(15%,rgba(221,221,221,1)), color-stop(60%,rgba(221,221,221,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(204,204,204,1) 0%,rgba(221,221,221,1) 15%,rgba(221,221,221,1) 60%,rgba(204,204,204,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(204,204,204,1) 0%,rgba(221,221,221,1) 15%,rgba(221,221,221,1) 60%,rgba(204,204,204,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(204,204,204,1) 0%,rgba(221,221,221,1) 15%,rgba(221,221,221,1) 60%,rgba(204,204,204,1) 100%); /* IE10+ */
+            background: linear-gradient(top,  rgba(204,204,204,1) 0%,rgba(221,221,221,1) 15%,rgba(221,221,221,1) 60%,rgba(204,204,204,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
+        }
+        .megalistSelected {
+            color:black;
+            background: rgb(252,227,0); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(252,227,0,1) 0%, rgba(239,222,110,1) 25%, rgba(234,213,93,1) 69%, rgba(206,175,0,1) 99%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,227,0,1)), color-stop(25%,rgba(239,222,110,1)), color-stop(69%,rgba(234,213,93,1)), color-stop(99%,rgba(206,175,0,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(252,227,0,1) 0%,rgba(239,222,110,1) 25%,rgba(234,213,93,1) 69%,rgba(206,175,0,1) 99%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(252,227,0,1) 0%,rgba(239,222,110,1) 25%,rgba(234,213,93,1) 69%,rgba(206,175,0,1) 99%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(252,227,0,1) 0%,rgba(239,222,110,1) 25%,rgba(234,213,93,1) 69%,rgba(206,175,0,1) 99%); /* IE10+ */
+            background: linear-gradient(top,  rgba(252,227,0,1) 0%,rgba(239,222,110,1) 25%,rgba(234,213,93,1) 69%,rgba(206,175,0,1) 99%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fce300', endColorstr='#ceaf00',GradientType=0 ); /* IE6-9 */
+        }
+
+    </style>
+    <script>
+        $(document).ready( function() {        
+            $('#tweets').megalist();
+            $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
+            $('#tweets').on('change', listChangeHandler);
+            $.getScript("http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
+        });
+
+        function dataReceived( data ) {
+            console.log(data);
+            $('#tweets').megalist('setDataProvider', data.results )
+        }
+    
+        function listChangeHandler( event ) { 
+            var message =   "selected index: " + event.selectedIndex + "\n" + 
+                            "selected item: " + event.srcElement.get()[0].outerHTML   ;
+            alert( message ); 
+        }
+        
+        function listItemLabelFunction( item ) {
+            return "<div><img src='" + item.profile_image_url + "' style='float:left;margin-right:10px;'/><strong>@" + item.from_user + "</strong>: " + item.text + "</div>";
+        }
+        
+    </script>
+      
+  </head>
+
+  <body >
+
+    <div class="megalist" id="tweets" ></div>
+  </body>
+</html>
