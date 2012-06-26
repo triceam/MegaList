@@ -420,7 +420,7 @@
     
     scrollWithInertia: function() {
         var friction = 0.96;
-        var animationInterval = 25;
+        var animationInterval = 12;
         
         //detect bounds and "snap back" if needed
         var startPosition = Math.ceil(this.yPosition/this.itemHeight);
@@ -455,7 +455,7 @@
     },
     
     snapToTop: function() {
-        var animationInterval = 25;
+        var animationInterval = 12;
         var self = this;
         var snapRatio = 1.5;
         this.stopAnimation();
@@ -474,7 +474,7 @@
     },
     
     snapToBottom: function() {
-        var animationInterval = 25;
+        var animationInterval = 12;
         var self = this;
         var snapRatio = 1.5;
         this.stopAnimation();
