@@ -420,7 +420,7 @@
     
     scrollWithInertia: function() {
         var friction = 0.96;
-        var animationInterval = 5;
+        var animationInterval = 1;
         
         //detect bounds and "snap back" if needed
         var startPosition = Math.ceil(this.yPosition/this.itemHeight);
