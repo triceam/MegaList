@@ -15,6 +15,8 @@
       
 
   Megalist.prototype = {
+  
+    precacheSize: 200,
 
     constructor: Megalist,
     
@@ -519,13 +521,23 @@
         }
         else if ( i !== undefined ){
             var iString = i.toString();
+            
+            if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
+                for ( var j = 0; j< this.precacheSize; j++ ) {
+                    var index = (j+i);
+                    this.listItems[ index.toString() ] = $("<li class='megalistItem' />");
+                }
+            }
+            item = this.listItems[ iString ];
+            
+            /*
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 item = $("<li class='megalistItem' />");
                 this.listItems[ iString ] = item;
             }
             else {
                 item = this.listItems[ i ];
-            }
+            }*/
             if ( i >= 0 && i < this.dataProvider.length ){
                 var data = this.dataProvider[i];
                 var label =  this.labelFunction ? this.labelFunction( data ) : data.toString();
