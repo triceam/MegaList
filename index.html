@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Megalist by triceam</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Megalist</h1>
+        <p>JavaScript List component, capable of very large datasets, with data virtualization</p>
+
+        <p class="view"><a href="https://github.com/triceam/MegaList">View the Project on GitHub <small>triceam/MegaList</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/triceam/MegaList/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/triceam/MegaList/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/triceam/MegaList">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>MegaList</h1>
+
+<h2>Introduction</h2>
+
+<p>Megalist is a jQuery plugin that creates a touch-enabled list component, capable of very large datasets, complete with data virtualization.   It was originally intended for touch-enabled devices, however it also works in many desktop browsers.</p>
+
+<p>For performance optimizations, the list component uses data virtualization techniques, so there are never more list elements in the HTML DOM than what is currently visible on the screen. As the user scrolls through content, the list updates the DOM elements accordingly. This makes scrolling lists of thousands of items extremely fluid.</p>
+
+<p>There are two methods that the list component can be used.  One option is to declare the list structure in HTML markup, another option is to specify a dataProvider array, from which the list will create DOM elements.</p>
+
+<h2>Samples</h2>
+
+<p>View the "samples" directory to see the scrollable list component in action.  All samples are interactive, and scrollable via touch or mouse events, with function event handlers.</p>
+
+<p>Simple List Created With Inline LI elements</p>
+
+<ul>
+<li><a href="http://triceam.github.com/MegaList/bin/samples/01%20-%20simple%20inline%20data.html">View Sample</a></li>
+<li><a href="https://github.com/triceam/MegaList/blob/master/samples/01%20-%20simple%20inline%20data.html">View Source</a></li>
+</ul><p>Simple List Created With A DataProvider of 100,000 items:</p>
+
+<ul>
+<li><a href="http://triceam.github.com/MegaList/bin/samples/02%20-%20simple%20dataprovider.html">View Sample</a></li>
+<li><a href="https://github.com/triceam/MegaList/blob/master/samples/02%20-%20simple%20dataprovider.html">View Source</a></li>
+</ul><p>Styled Dynamic List Created With Remote Data:</p>
+
+<ul>
+<li><a href="http://triceam.github.com/MegaList/bin/samples/03%20-%20styled%20list.html">View Sample</a></li>
+<li><a href="https://github.com/triceam/MegaList/blob/master/samples/03%20-%20styled%20list.html">View Source</a></li>
+</ul><h2>API</h2>
+
+<h3>Methods</h3>
+
+<table>
+<tr>
+<th>Event</th>
+   <th>Description</th>
+ </tr>
+<tr>
+<td>.megalist()</td>
+   <td>Initializes a list component.</td>
+ </tr>
+<tr>
+<td>.megalist('setDataProvider', dataProviderArray)</td>
+   <td>Initializes a list component.</td>
+ </tr>
+<tr>
+<td>.megalist('setLabelFunction', labelFunction)</td>
+   <td>Sets the data provider array for the list instance.  There is no concrete limit on the length of the data provider array.  Elements within the array can be of primitive or complex types.</td>
+ </tr>
+<tr>
+<td>.megalist('setSelectedIndex', index)</td>
+   <td>Set the item at selected index as selected.</td>
+ </tr>
+<tr>
+<td>.megalist('getSelectedIndex', index)</td>
+   <td>Returns the currently selected index.  If no list item is selected, returns -1.</td>
+ </tr>
+<tr>
+<td>.megalist('clearSelectedIndex', index)</td>
+   <td>Clears the currently selected item in the list.</td>
+ </tr>
+</table><h3>Events</h3>
+
+<p>Megalist exposes a change event for handling when the selected item in the list changes.</p>
+
+<table>
+<tr>
+<th>Event</th>
+   <th>Description</th>
+ </tr>
+<tr>
+<td>change</td>
+   <td>This event is fired when the selected item in the list is changed.  You can access details of the selected item in the list by accessing attributes of the event.  
+    <strong>event.index</strong>
+    The numeric index for the item in the list that was clicked/touched.
+    <strong>event.srcElement</strong>
+    A jQuery reference to the list item that was clicked/touched.
+    <strong>event.item</strong>
+    A reference to the data item for the list item.  If using inline &lt;li&gt; in markup, this will be the same DOM element as event.srcElement.  If using a dataProvider, it will be the object in the dataProvider array corresponding to the selected list item.</td>
+ </tr>
+</table>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/triceam">triceam</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
