@@ -73,7 +73,7 @@
 
   <body >
  <h3>Specifying a Data Provider Array</h3>
-      <p>This is dynamic, based upon a search query for "Adobe" from <a href="http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" target="_blank">twitter.com</a>.  It also has embedded HTML within each list item.</p>
+      <p>This is dynamic, based upon a search query for "Adobe" from <a href="http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" target="_blank">twitter.com</a>.  It also has embedded HTML within each list item.</p>
       <p><div class="megalist" id="tweets" ></div></p>
       <p>First, declare the basic HTML container &lt;div&gt;, then create the list, add a label function, then request data from twitter.  Once data is loaded, it will be displayed within the list and formatted using the label function.</p>
       <h4>Markup</h4>
@@ -83,7 +83,7 @@
     $('#tweets').megalist();
     $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
     $('#tweets').on('change', listChangeHandler);
-    $.getScript("http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
+    $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
 });
 
 function dataReceived( data ) {

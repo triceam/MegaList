@@ -61,7 +61,7 @@
             $('#tweets').megalist();
             $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
             $('#tweets').on('change', listChangeHandler);
-            $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=500&include_entities=true&result_type=mixed&callback=dataReceived" );
+            $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
         });
 
         function dataReceived( data ) {

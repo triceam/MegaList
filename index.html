@@ -38,26 +38,31 @@
 
 <p>There are two methods that the list component can be used.  One option is to declare the list structure in HTML markup, another option is to specify a dataProvider array, from which the list will create DOM elements.</p>
 
+<hr/>
 <h2>Samples</h2>
 
 <p>View the "samples" directory to see the scrollable list component in action.  All samples are interactive, and scrollable via touch or mouse events, with function event handlers.</p>
 
 <p>Simple List Created With Inline LI elements</p>
-
 <ul>
 <li><a href="http://triceam.github.com/MegaList/bin/samples/01%20-%20simple%20inline%20data.html">View Sample</a></li>
 <li><a href="https://github.com/triceam/MegaList/blob/master/samples/01%20-%20simple%20inline%20data.html">View Source</a></li>
-</ul><p>Simple List Created With A DataProvider of 100,000 items:</p>
+</ul>
 
+<p>Simple List Created With A DataProvider of 100,000 items:</p>
 <ul>
 <li><a href="http://triceam.github.com/MegaList/bin/samples/02%20-%20simple%20dataprovider.html">View Sample</a></li>
 <li><a href="https://github.com/triceam/MegaList/blob/master/samples/02%20-%20simple%20dataprovider.html">View Source</a></li>
-</ul><p>Styled Dynamic List Created With Remote Data:</p>
+</ul>
 
+<p>Styled Dynamic List Created With Remote Data:</p>
 <ul>
 <li><a href="http://triceam.github.com/MegaList/bin/samples/03%20-%20styled%20list.html">View Sample</a></li>
 <li><a href="https://github.com/triceam/MegaList/blob/master/samples/03%20-%20styled%20list.html">View Source</a></li>
-</ul><h2>API</h2>
+</ul>
+
+<hr/>
+<h2>API</h2>
 
 <h3>Methods</h3>
 
@@ -110,6 +115,22 @@
     A reference to the data item for the list item.  If using inline &lt;li&gt; in markup, this will be the same DOM element as event.srcElement.  If using a dataProvider, it will be the object in the dataProvider array corresponding to the selected list item.</td>
  </tr>
 </table>
+
+
+<h2>Observations</h2>
+
+<ul>
+<li style="padding-bottom:10px;">Contrary to my expectations, using CSS3 translate3d is actually slower than using CSS top/left when placing the virtualized content.  If you enable CSS3 translate3d and set backface visibility, there is an extremely noticeable performance degradation on both desktop and mobile devices.</li>
+
+<li style="padding-bottom:10px;">I've experimented with lots of permutations to get the best performance possible.  I'm not finished yet, but I've found that you can achieve significantly faster performance of DOM manipulation by removing elements from the DOM, manipulating them, then re-adding them.   This is what is done within the updateLayout() method.  The &lt;ul&gt; is removed from the DOM, &lt;li&gt; elements are added or removed, and then the &lt;ul&gt; is added back to the DOM.  You may see a flicker on rare occasions, but I didn't find this overly intrusive.</li>
+
+<li style="padding-bottom:10px;">For small data sets, this may not be much advantage - you can get better performance by just using something like iScroll in a &lt;div&gt; containing a &lt;ul&gt;.  With large data sets, this is definitely faster.</li>
+
+<li style="padding-bottom:10px;">The more complex the HTML inside of your label function, the slower the animation will be.</li>
+</ul>
+
+
+
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/triceam">triceam</a></p>
