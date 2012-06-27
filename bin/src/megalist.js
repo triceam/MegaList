@@ -354,7 +354,7 @@
             this.setItemPosition( this.$ul, 0, -this.yPosition );
             this.processedItems = {};
             
-            while (((i)*this.itemHeight) < (height+(2*this.itemHeight))) {
+            while (((i)*this.itemHeight) < 2*(height+(2*this.itemHeight))) {
             
                 var index = Math.max(  startPosition+i, 0 );
                 index = Math.min( index, this.dataProvider.length );
@@ -539,7 +539,7 @@
             this.useTransform = style.WebkitTransition !== undefined || style.MozTransition !== undefined || style.OTransition !== undefined || style.transition !== undefined;
         }
         
-        if ( this.useTransform ) {
+        if ( false ) {//this.useTransform ) {
             var cssString = "translate3d("+x+"px, "+y+"px, 0px)";
             item.css( "-"+this.vendorPrefix+"-transform", cssString );
         } 
