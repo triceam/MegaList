@@ -13,6 +13,7 @@
     
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
     <script src="../lib/google-code-prettify/prettify.js"></script>
+    <script src="../lib/raf.js"></script>
       
     <style>
         /* gradients created using http://www.colorzilla.com/gradient-editor/ */
@@ -20,6 +21,7 @@
         
         #tweets {
             height: 400px;
+            width:100%;
         }    
         .megalist li {
             height:60px;
@@ -47,11 +49,11 @@
             $('#tweets').megalist();
             $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
             $('#tweets').on('change', listChangeHandler);
-            $.getScript("http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
+            $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
         });
 
         function dataReceived( data ) {
-            console.log(data);
+            //console.log(data);
             $('#tweets').megalist('setDataProvider', data.results )
         }
     
@@ -62,7 +64,7 @@
         }
         
         function listItemLabelFunction( item ) {
-            return "<div><img src='" + item.profile_image_url + "' style='float:left;margin-right:10px;'/><strong>@" + item.from_user + "</strong>: " + item.text + "</div>";
+            return "<img src='" + item.profile_image_url + "' style='width:48px;height:48px;float:left;margin-right:10px;'/><strong>@" + item.from_user + "</strong>: " + item.text;
         }
         
     </script>
@@ -71,7 +73,7 @@
 
   <body >
  <h3>Specifying a Data Provider Array</h3>
-      <p>This is dynamic, based upon a search query for "Adobe" from <a href="http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" target="_blank">twitter.com</a>.  It also has embedded HTML within each list item.</p>
+      <p>This is dynamic, based upon a search query for "Adobe" from <a href="http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" target="_blank">twitter.com</a>.  It also has embedded HTML within each list item.</p>
       <p><div class="megalist" id="tweets" ></div></p>
       <p>First, declare the basic HTML container &lt;div&gt;, then create the list, add a label function, then request data from twitter.  Once data is loaded, it will be displayed within the list and formatted using the label function.</p>
       <h4>Markup</h4>
@@ -81,7 +83,7 @@
     $('#tweets').megalist();
     $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
     $('#tweets').on('change', listChangeHandler);
-    $.getScript("http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
+    $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
 });
 
 function dataReceived( data ) {

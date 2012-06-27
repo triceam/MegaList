@@ -15,6 +15,8 @@
       
 
   Megalist.prototype = {
+  
+    animating: false,
 
     constructor: Megalist,
     
@@ -26,7 +28,7 @@
         //params used in detecting "click" action - without collision of DOM events            
         this.MAX_CLICK_DURATION_MS = 350;
         this.MAX_MOUSE_POSITION_FLOAT_PX = 10;
-        this.MAX_TOUCH_POSITION_FLOAT_PX = 25;
+        this.MAX_TOUCH_POSITION_FLOAT_PX = 10;
         
         this.SCROLLBAR_BORDER = 1;
         this.SCROLLBAR_MIN_SIZE = 10;
@@ -76,6 +78,7 @@
         this.MOUSE_WHEEL = (navigator.userAgent.search("Fire") < 0) ? "mousewheel" : "DOMMouseScroll";
         
         $(window).resize( this.resizeHandler );
+        this.$el.bind( "gesturestart", function( event ) { event.preventDefault(); return false;} );
         this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         this.$el.bind( this.MOUSE_WHEEL, function( event ) { event.preventDefault();  return self.onMouseWheel(event); } );
         
@@ -132,8 +135,10 @@
     },
     
     onTouchStart: function ( event ) {
-        this.stopAnimation();
-        this.cleanupListItems(true);
+        if (!this.animating ) {
+            this.animating = true;
+            this.render();
+        }  
         
         if ( this.touchSupported ) {
             this.$scrollbar.fadeTo( 300,1 );
@@ -141,12 +146,15 @@
         
         this.cleanupEventHandlers();
         
+        this.$el.unbind( this.TOUCH_START, this.touchStartHandler );
         $(document).bind( this.TOUCH_MOVE, this.touchMoveHandler );
         $(document).bind( this.TOUCH_END, this.touchEndHandler );
         
+        this.updateVelocity( 0 );
         this.inputCoordinates = this.getInputCoordinates( event );
         this.inputStartCoordinates = this.inputCoordinates;
         this.inputStartTime = new Date().getTime();
+        
         
         event.preventDefault();
         return false;
@@ -170,10 +178,8 @@
         if ( this.yPosition > maxPosition ) {
             this.yPosition = maxPosition;
         }
-
         //end scroll limiting
-            
-        this.updateLayout();
+          
         this.inputCoordinates = newCoordinates;
         
         event.preventDefault();
@@ -181,6 +187,7 @@
     },
     
     onTouchEnd: function ( event ) {
+        this.animating = false;
         var id = this.$el.attr("id");
         
         this.inputEndCoordinates = this.inputCoordinates;
@@ -195,12 +202,12 @@
         else {
             this.cleanupListItems();
         }
+        this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         event.preventDefault();
         return false;
     },
     
     onMouseWheel: function ( event ) {
-        this.stopAnimation();
         clearTimeout( this.cleanupTimeout );
     
         //only concerned about vertical scroll
@@ -337,6 +344,8 @@
             
             var height = this.$el.height();
             
+            this.$ul.detach();
+            
             var i = -1;
             var startPosition = Math.ceil(this.yPosition/this.itemHeight);
             var offset = -(this.yPosition % this.itemHeight);
@@ -344,7 +353,7 @@
             this.setItemPosition( this.$ul, 0, -this.yPosition );
             this.processedItems = {};
             
-            while (((i)*this.itemHeight) < (height+(2*this.itemHeight))) {
+            while (((i)*this.itemHeight) < 2*(height+(2*this.itemHeight))) {
             
                 var index = Math.max(  startPosition+i, 0 );
                 index = Math.min( index, this.dataProvider.length );
@@ -354,10 +363,12 @@
                 
                 this.processedItems[ index.toString() ] = item;
                 this.setItemPosition( item, 0, ((startPosition+i)*this.itemHeight) );
+                
                 if ( item.parent().length <= 0 ) {
                     this.$ul.append( item );
                     
                     if ( this.itemHeight <= 0 ) {
+                        this.$el.append( this.$ul );
                         this.itemHeight = item.outerHeight();
                         this.updateLayout();
                         return;
@@ -366,9 +377,11 @@
                 i++;
             }
             
+            this.cleanupListItems(true);   
             if ( ignoreScrollbar !== true ) {
                 this.updateScrollBar();
             }
+            this.$scrollbar.before( this.$ul );
         }
     },
     
@@ -417,9 +430,18 @@
         }
     },
     
+    render: function() {
+        //console.log("render");
+        var self = this;
+        if ( this.animating ) {
+             requestAnimFrame( function() { self.render(); } );
+        }
+        
+        this.updateLayout();
+    },
+    
     scrollWithInertia: function() {
-        var friction = 0.96;
-        var animationInterval = 25;
+        var friction = 0.97;
         
         //detect bounds and "snap back" if needed
         var startPosition = Math.ceil(this.yPosition/this.itemHeight);
@@ -444,9 +466,9 @@
         this.updateLayout();
         
         var self= this;
-        this.stopAnimation();
         if ( Math.abs(yDelta) >= 1 ) {
-            this.animationTimeout = setTimeout( function() { self.scrollWithInertia(); }, animationInterval );    
+            this.cleanupListItems(true);   
+            requestAnimFrame( function() { self.scrollWithInertia(); } );
         }
         else {
             this.cleanupListItems();
@@ -454,45 +476,44 @@
     },
     
     snapToTop: function() {
-        var animationInterval = 25;
         var self = this;
-        var snapRatio = 1.5;
-        this.stopAnimation();
+        var snapRatio = 5;
         var targetPosition = 0;
         
-        if ( this.yPosition !== 0 ) {
+        if ( this.yPosition < -2 ) {
             this.yPosition += (targetPosition-this.yPosition)/snapRatio;
-            this.yPosition = Math.round(this.yPosition);
             this.updateLayout();
-            this.animationTimeout = setTimeout( function() { self.snapToTop(); }, animationInterval );    
+            if (!this.animating ){
+                requestAnimFrame( function() { self.snapToTop(); } );   
+            }
         }
         else {
+            this.yPosition = 0;
             this.updateLayout();
             this.cleanupListItems();
         }
     },
     
     snapToBottom: function() {
-        var animationInterval = 25;
         var self = this;
-        var snapRatio = 1.5;
-        this.stopAnimation();
+        var snapRatio = 5;
         
         var maxPosition = (this.dataProvider.length*this.itemHeight) - (this.$el.height());
-        if ( this.yPosition > maxPosition ) {
+        if ( Math.round(this.yPosition) > maxPosition ) {
             
             this.yPosition += (maxPosition - this.yPosition)/snapRatio;
             
             this.updateLayout();
-            this.animationTimeout = setTimeout( function() { self.snapToBottom(); }, animationInterval );    
+            
+            if (!this.animating ){
+                requestAnimFrame( function() { self.snapToBottom(); } );      
+            }
         }
         else {
+            this.yPosition = maxPosition;
+            this.updateLayout();
             this.cleanupListItems();
         }
-    },
-    
-    stopAnimation: function() {
-        clearTimeout( this.animationTimeout );
     },
     
     setItemPosition: function( item, x, y ) {
@@ -503,7 +524,9 @@
             this.useTransform = style.WebkitTransition !== undefined || style.MozTransition !== undefined || style.OTransition !== undefined || style.transition !== undefined;
         }
         
-        if ( this.useTransform ) {
+        
+        //temporarily disabling 3d transform
+        if ( false ) {//this.useTransform ) {
             var cssString = "translate3d("+x+"px, "+y+"px, 0px)";
             item.css( "-"+this.vendorPrefix+"-transform", cssString );
         } 
@@ -520,6 +543,16 @@
         }
         else if ( i !== undefined ){
             var iString = i.toString();
+           
+            /*
+            if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
+                for ( var j = 0; j< 200; j++ ) {
+                    var index = (j+i);
+                    this.listItems[ index.toString() ] = $("<li class='megalistItem' />");
+                }
+            }
+            item = this.listItems[ iString ];
+            */
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 item = $("<li class='megalistItem' />");
                 this.listItems[ iString ] = item;
