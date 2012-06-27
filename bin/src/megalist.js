@@ -28,7 +28,7 @@
         //params used in detecting "click" action - without collision of DOM events            
         this.MAX_CLICK_DURATION_MS = 350;
         this.MAX_MOUSE_POSITION_FLOAT_PX = 10;
-        this.MAX_TOUCH_POSITION_FLOAT_PX = 25;
+        this.MAX_TOUCH_POSITION_FLOAT_PX = 10;
         
         this.SCROLLBAR_BORDER = 1;
         this.SCROLLBAR_MIN_SIZE = 10;
@@ -135,7 +135,10 @@
     },
     
     onTouchStart: function ( event ) {
-        this.stopAnimation();
+        if (!this.animating ) {
+            this.animating = true;
+            this.render();
+        }  
         
         if ( this.touchSupported ) {
             this.$scrollbar.fadeTo( 300,1 );
@@ -147,14 +150,11 @@
         $(document).bind( this.TOUCH_MOVE, this.touchMoveHandler );
         $(document).bind( this.TOUCH_END, this.touchEndHandler );
         
+        this.updateVelocity( 0 );
         this.inputCoordinates = this.getInputCoordinates( event );
         this.inputStartCoordinates = this.inputCoordinates;
         this.inputStartTime = new Date().getTime();
         
-        if (!this.animating ) {
-            this.animating = true;
-            this.render();
-        }  
         
         event.preventDefault();
         return false;
@@ -178,7 +178,6 @@
         if ( this.yPosition > maxPosition ) {
             this.yPosition = maxPosition;
         }
-
         //end scroll limiting
           
         this.inputCoordinates = newCoordinates;
@@ -188,6 +187,7 @@
     },
     
     onTouchEnd: function ( event ) {
+        this.animating = false;
         var id = this.$el.attr("id");
         
         this.inputEndCoordinates = this.inputCoordinates;
@@ -197,20 +197,17 @@
         this.cleanupEventHandlers();
         
         if ( !clickEvent ) {
-            this.animating = true;
             this.scrollWithInertia();
         }
         else {
             this.cleanupListItems();
         }
-        this.animating = false;
         this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         event.preventDefault();
         return false;
     },
     
     onMouseWheel: function ( event ) {
-        this.stopAnimation();
         clearTimeout( this.cleanupTimeout );
     
         //only concerned about vertical scroll
@@ -347,6 +344,8 @@
             
             var height = this.$el.height();
             
+            this.$ul.detach();
+            
             var i = -1;
             var startPosition = Math.ceil(this.yPosition/this.itemHeight);
             var offset = -(this.yPosition % this.itemHeight);
@@ -364,10 +363,12 @@
                 
                 this.processedItems[ index.toString() ] = item;
                 this.setItemPosition( item, 0, ((startPosition+i)*this.itemHeight) );
+                
                 if ( item.parent().length <= 0 ) {
                     this.$ul.append( item );
                     
                     if ( this.itemHeight <= 0 ) {
+                        this.$el.append( this.$ul );
                         this.itemHeight = item.outerHeight();
                         this.updateLayout();
                         return;
@@ -376,9 +377,11 @@
                 i++;
             }
             
+            this.cleanupListItems(true);   
             if ( ignoreScrollbar !== true ) {
                 this.updateScrollBar();
             }
+            this.$scrollbar.before( this.$ul );
         }
     },
     
@@ -428,7 +431,7 @@
     },
     
     render: function() {
-    
+        //console.log("render");
         var self = this;
         if ( this.animating ) {
              requestAnimFrame( function() { self.render(); } );
@@ -438,10 +441,7 @@
     },
     
     scrollWithInertia: function() {
-        //console.log( "scrollWithInertia" )
-        this.animating = false;
-        var friction = 0.96;
-        var animationInterval = 1;
+        var friction = 0.97;
         
         //detect bounds and "snap back" if needed
         var startPosition = Math.ceil(this.yPosition/this.itemHeight);
@@ -466,9 +466,8 @@
         this.updateLayout();
         
         var self= this;
-        //this.stopAnimation();
         if ( Math.abs(yDelta) >= 1 ) {
-            //this.animationTimeout = setTimeout( function() { self.scrollWithInertia(); }, animationInterval );    
+            this.cleanupListItems(true);   
             requestAnimFrame( function() { self.scrollWithInertia(); } );
         }
         else {
@@ -477,18 +476,13 @@
     },
     
     snapToTop: function() {
-     //   console.log("snaptotop")
-        var animationInterval = 5;
         var self = this;
         var snapRatio = 5;
-        this.stopAnimation();
         var targetPosition = 0;
         
         if ( this.yPosition < -2 ) {
             this.yPosition += (targetPosition-this.yPosition)/snapRatio;
-            //this.yPosition = Math.round(this.yPosition);
             this.updateLayout();
-           // this.animationTimeout = setTimeout( function() { self.snapToTop(); }, animationInterval ); 
             if (!this.animating ){
                 requestAnimFrame( function() { self.snapToTop(); } );   
             }
@@ -501,11 +495,8 @@
     },
     
     snapToBottom: function() {
-      //  console.log(this.animating, "snapToBottom")
-        var animationInterval = 5;
         var self = this;
         var snapRatio = 5;
-        this.stopAnimation();
         
         var maxPosition = (this.dataProvider.length*this.itemHeight) - (this.$el.height());
         if ( Math.round(this.yPosition) > maxPosition ) {
@@ -513,7 +504,6 @@
             this.yPosition += (maxPosition - this.yPosition)/snapRatio;
             
             this.updateLayout();
-            //this.animationTimeout = setTimeout( function() { self.snapToBottom(); }, animationInterval ); 
             
             if (!this.animating ){
                 requestAnimFrame( function() { self.snapToBottom(); } );      
@@ -524,11 +514,6 @@
             this.updateLayout();
             this.cleanupListItems();
         }
-    },
-    
-    stopAnimation: function() {
-       // this.animating = false;
-        //clearTimeout( this.animationTimeout );
     },
     
     setItemPosition: function( item, x, y ) {
@@ -558,7 +543,8 @@
         }
         else if ( i !== undefined ){
             var iString = i.toString();
-           /* 
+           
+            /*
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 for ( var j = 0; j< 200; j++ ) {
                     var index = (j+i);
@@ -567,7 +553,6 @@
             }
             item = this.listItems[ iString ];
             */
-            
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 item = $("<li class='megalistItem' />");
                 this.listItems[ iString ] = item;

@@ -7,6 +7,7 @@
               window.oRequestAnimationFrame      || 
               window.msRequestAnimationFrame     || 
               function( callback ){
-                window.setTimeout(callback, 1000 / 1000);
+                //using 1 ms for mobile device latency
+                window.setTimeout(callback,1);
               };
     })();
