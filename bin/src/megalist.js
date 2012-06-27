@@ -16,7 +16,7 @@
 
   Megalist.prototype = {
   
-    precacheSize: 200,
+    animating: false,
 
     constructor: Megalist,
     
@@ -78,6 +78,7 @@
         this.MOUSE_WHEEL = (navigator.userAgent.search("Fire") < 0) ? "mousewheel" : "DOMMouseScroll";
         
         $(window).resize( this.resizeHandler );
+        this.$el.bind( "gesturestart", function( event ) { event.preventDefault(); return false;} );
         this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         this.$el.bind( this.MOUSE_WHEEL, function( event ) { event.preventDefault();  return self.onMouseWheel(event); } );
         
@@ -142,12 +143,18 @@
         
         this.cleanupEventHandlers();
         
+        this.$el.unbind( this.TOUCH_START, this.touchStartHandler );
         $(document).bind( this.TOUCH_MOVE, this.touchMoveHandler );
         $(document).bind( this.TOUCH_END, this.touchEndHandler );
         
         this.inputCoordinates = this.getInputCoordinates( event );
         this.inputStartCoordinates = this.inputCoordinates;
         this.inputStartTime = new Date().getTime();
+        
+        if (!this.animating ) {
+            this.animating = true;
+            this.render();
+        }  
         
         event.preventDefault();
         return false;
@@ -173,8 +180,7 @@
         }
 
         //end scroll limiting
-            
-        this.updateLayout();
+          
         this.inputCoordinates = newCoordinates;
         
         event.preventDefault();
@@ -191,11 +197,14 @@
         this.cleanupEventHandlers();
         
         if ( !clickEvent ) {
+            this.animating = true;
             this.scrollWithInertia();
         }
         else {
             this.cleanupListItems();
         }
+        this.animating = false;
+        this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         event.preventDefault();
         return false;
     },
@@ -418,7 +427,19 @@
         }
     },
     
+    render: function() {
+    
+        var self = this;
+        if ( this.animating ) {
+             requestAnimFrame( function() { self.render(); } );
+        }
+        
+        this.updateLayout();
+    },
+    
     scrollWithInertia: function() {
+        //console.log( "scrollWithInertia" )
+        this.animating = false;
         var friction = 0.96;
         var animationInterval = 1;
         
@@ -445,9 +466,10 @@
         this.updateLayout();
         
         var self= this;
-        this.stopAnimation();
+        //this.stopAnimation();
         if ( Math.abs(yDelta) >= 1 ) {
-            this.animationTimeout = setTimeout( function() { self.scrollWithInertia(); }, animationInterval );    
+            //this.animationTimeout = setTimeout( function() { self.scrollWithInertia(); }, animationInterval );    
+            requestAnimFrame( function() { self.scrollWithInertia(); } );
         }
         else {
             this.cleanupListItems();
@@ -455,45 +477,58 @@
     },
     
     snapToTop: function() {
+     //   console.log("snaptotop")
         var animationInterval = 5;
         var self = this;
-        var snapRatio = 1.5;
+        var snapRatio = 5;
         this.stopAnimation();
         var targetPosition = 0;
         
-        if ( this.yPosition !== 0 ) {
+        if ( this.yPosition < -2 ) {
             this.yPosition += (targetPosition-this.yPosition)/snapRatio;
-            this.yPosition = Math.round(this.yPosition);
+            //this.yPosition = Math.round(this.yPosition);
             this.updateLayout();
-            this.animationTimeout = setTimeout( function() { self.snapToTop(); }, animationInterval );    
+           // this.animationTimeout = setTimeout( function() { self.snapToTop(); }, animationInterval ); 
+            if (!this.animating ){
+                requestAnimFrame( function() { self.snapToTop(); } );   
+            }
         }
         else {
+            this.yPosition = 0;
             this.updateLayout();
             this.cleanupListItems();
         }
     },
     
     snapToBottom: function() {
+      //  console.log(this.animating, "snapToBottom")
         var animationInterval = 5;
         var self = this;
-        var snapRatio = 1.5;
+        var snapRatio = 5;
         this.stopAnimation();
         
         var maxPosition = (this.dataProvider.length*this.itemHeight) - (this.$el.height());
-        if ( this.yPosition > maxPosition ) {
+        if ( Math.round(this.yPosition) > maxPosition ) {
             
             this.yPosition += (maxPosition - this.yPosition)/snapRatio;
             
             this.updateLayout();
-            this.animationTimeout = setTimeout( function() { self.snapToBottom(); }, animationInterval );    
+            //this.animationTimeout = setTimeout( function() { self.snapToBottom(); }, animationInterval ); 
+            
+            if (!this.animating ){
+                requestAnimFrame( function() { self.snapToBottom(); } );      
+            }
         }
         else {
+            this.yPosition = maxPosition;
+            this.updateLayout();
             this.cleanupListItems();
         }
     },
     
     stopAnimation: function() {
-        clearTimeout( this.animationTimeout );
+       // this.animating = false;
+        //clearTimeout( this.animationTimeout );
     },
     
     setItemPosition: function( item, x, y ) {
@@ -521,23 +556,23 @@
         }
         else if ( i !== undefined ){
             var iString = i.toString();
-            
+           /* 
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
-                for ( var j = 0; j< this.precacheSize; j++ ) {
+                for ( var j = 0; j< 200; j++ ) {
                     var index = (j+i);
                     this.listItems[ index.toString() ] = $("<li class='megalistItem' />");
                 }
             }
             item = this.listItems[ iString ];
+            */
             
-            /*
             if ( this.listItems[ iString ] === null || this.listItems[ iString ] === undefined ) {
                 item = $("<li class='megalistItem' />");
                 this.listItems[ iString ] = item;
             }
             else {
                 item = this.listItems[ i ];
-            }*/
+            }
             if ( i >= 0 && i < this.dataProvider.length ){
                 var data = this.dataProvider[i];
                 var label =  this.labelFunction ? this.labelFunction( data ) : data.toString();

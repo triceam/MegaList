@@ -33,6 +33,10 @@
 	overflow:visible;
 	
 	visibility:hidden;
+	
+    backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	
 	transform: translate3d(0px, 0px, 0px);
 	transform: -o-translate3d(0px, 0px, 0px);
 	transform: -ms-translate3d(0px, 0px, 0px);
@@ -46,6 +50,10 @@
 	position: absolute;
 	width:100%;
 	border-top:1px solid #EDEDED;
+	
+    backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	
 	transform: translate3d(0px, 0px, 0px);
 	transform: -o-translate3d(0px, 0px, 0px);
 	transform: -ms-translate3d(0px, 0px, 0px);

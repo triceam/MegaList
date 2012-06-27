@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Megalist</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -13,6 +13,7 @@
     
     <link href="../lib/google-code-prettify/prettify.css" rel="stylesheet">
     <script src="../lib/google-code-prettify/prettify.js"></script>
+    <script src="../lib/raf.js"></script>
       
     <style>
         /* gradients created using http://www.colorzilla.com/gradient-editor/ */
@@ -35,7 +36,7 @@
             height:100%;
         } 
         .megalist li {
-            height:60px;
+            height:80px;
             white-space: normal;
             border-top:1px solid #999;
         }
@@ -60,7 +61,7 @@
             $('#tweets').megalist();
             $('#tweets').megalist('setLabelFunction', listItemLabelFunction );
             $('#tweets').on('change', listChangeHandler);
-            $.getScript("http://search.twitter.com/search.json?q=Adobe&rpp=50&include_entities=true&result_type=mixed&callback=dataReceived" );
+            $.getScript("http://search.twitter.com/search.json?q=andytrice&rpp=500&include_entities=true&result_type=mixed&callback=dataReceived" );
         });
 
         function dataReceived( data ) {
@@ -75,7 +76,7 @@
         }
         
         function listItemLabelFunction( item ) {
-            return "<div><img src='" + item.profile_image_url + "' style='width:48px;height:48px;float:left;margin-right:10px;'/><strong>@" + item.from_user + "</strong>: " + item.text + "</div>";
+            return "<img src='" + item.profile_image_url + "' style='width:48px;height:48px;float:left;margin-right:10px;'/><strong>@" + item.from_user + "</strong>: " + item.text + "";
         }
         
     </script>
