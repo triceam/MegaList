@@ -34,13 +34,20 @@
 
 <p>Megalist is a jQuery plugin that creates a touch-enabled list component, capable of very large datasets, complete with data virtualization.   It was originally intended for touch-enabled devices, however it also works in many desktop browsers.</p>
 
+<p><iframe width="500" height="375" src="http://www.youtube.com/embed/KBmOtxV6Sio?rel=0" frameborder="0" allowfullscreen></iframe></p>
+
 <p>For performance optimizations, the list component uses data virtualization techniques, so there are never more list elements in the HTML DOM than what is currently visible on the screen. As the user scrolls through content, the list updates the DOM elements accordingly. This makes scrolling lists of thousands of items extremely fluid.</p>
 
 <p>There are two methods that the list component can be used.  One option is to declare the list structure in HTML markup, another option is to specify a dataProvider array, from which the list will create DOM elements.</p>
 
 <hr/>
-<h2>Samples</h2>
+<h2>Why?</h2>   
 
+<p>Sometimes you need a pre-built list that you can reuse.  Sometimes you need to scroll through big data sets, and other times you just need component logic kept away from your app logic.  It doesn't fit every scenario, but it certainly fits a few.</p>
+<p>Data virtualization techniques allow you to quickly scroll through massive lists, without performance degradation.  However, if your app really has 100K list items to scroll through, you should fire your UX designer.</p>
+
+<hr/>
+<h2>Samples</h2>
 <p>View the "samples" directory to see the scrollable list component in action.  All samples are interactive, and scrollable via touch or mouse events, with function event handlers.</p>
 
 <p>Simple List Created With Inline LI elements</p>
@@ -130,6 +137,19 @@
 </ul>
 
 
+
+<h2>LICENSE</h2>
+
+<p>THIS SOFTWARE IS PROVIDED BY ANDREW M. TRICE ''AS IS'' AND ANY EXPRESS OR IMPLIED 
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ANDREW M. TRICE OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</p>
 
       </section>
       <footer>
