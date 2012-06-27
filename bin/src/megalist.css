@@ -36,12 +36,12 @@
 	/*
     backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
-	*/
 	transform: translate3d(0px, 0px, 0px);
 	transform: -o-translate3d(0px, 0px, 0px);
 	transform: -ms-translate3d(0px, 0px, 0px);
 	transform: -moz-translate3d(0px, 0px, 0px);
 	transform: -webkit-translate3d(0px, 0px, 0px);
+	*/
 }
 
 .megalist li {
@@ -53,12 +53,13 @@
 	/*
     backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
-	*/
 	transform: translate3d(0px, 0px, 0px);
 	transform: -o-translate3d(0px, 0px, 0px);
 	transform: -ms-translate3d(0px, 0px, 0px);
 	transform: -moz-translate3d(0px, 0px, 0px);
 	transform: -webkit-translate3d(0px, 0px, 0px);
+	
+	*/
 }
 
 .megalistItem {

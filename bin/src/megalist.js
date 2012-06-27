@@ -539,6 +539,8 @@
             this.useTransform = style.WebkitTransition !== undefined || style.MozTransition !== undefined || style.OTransition !== undefined || style.transition !== undefined;
         }
         
+        
+        //temporarily disabling 3d transform
         if ( false ) {//this.useTransform ) {
             var cssString = "translate3d("+x+"px, "+y+"px, 0px)";
             item.css( "-"+this.vendorPrefix+"-transform", cssString );
