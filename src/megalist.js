@@ -62,10 +62,13 @@
         });
         
         this.$ul.css( "visibility", "visible" );
+        this.$el.attr( "tabindex", "-1" ); // Set tabindex, so the element can be in focus
         
         this.yPosition = 0;
         this.updateLayout();
+
         
+        this.$el.mousedown( function () { this.focus(); } );
         
         this.resizeHandler = function( event ) { return self.onResize(event); };
         this.touchStartHandler = function( event ) { return self.onTouchStart(event); };
@@ -81,6 +84,8 @@
         this.$el.bind( "gesturestart", function( event ) { event.preventDefault(); return false;} );
         this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         this.$el.bind( this.MOUSE_WHEEL, function( event ) { event.preventDefault();  return self.onMouseWheel(event); } );
+
+        $(window).bind( "keydown", function( event ) { return self.onKeydown(event); } );
         
         if ( !this.touchSupported) {
         	var sbWidth = parseInt(this.$scrollbar.css( "width" ), 10);
@@ -207,6 +212,29 @@
         return false;
     },
     
+    onKeydown: function ( event ) {
+
+        if ( !this.$el.is(':focus') ) return;
+        if ( event.which != 38 && event.which != 40 ) return;
+
+        var delta = event.which == 40 ? 1 : -1;
+
+        var index = this.getSelectedIndex() + delta;
+        if (index > this.dataProvider.length -1) index = this.dataProvider.length;
+        if (index < 0) index = 0;
+
+        this.setSelectedIndex(index);
+
+        if (this.yPosition > (index*this.itemHeight)) this.yPosition = (index*this.itemHeight);
+        if (this.yPosition < ((index+1)*this.itemHeight) - this.$el.height()) this.yPosition = ((index+1)*this.itemHeight) - this.$el.height();
+        
+        var self = this;
+        this.updateLayout();
+        this.cleanupTimeout = setTimeout( function(){ self.cleanupListItems(); }, 100 );
+
+        return false;
+    },
+
     onMouseWheel: function ( event ) {
         clearTimeout( this.cleanupTimeout );
     
