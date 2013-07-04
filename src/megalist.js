@@ -62,10 +62,13 @@
         });
         
         this.$ul.css( "visibility", "visible" );
+        this.$el.attr( "tabindex", "-1" ); // Set tabindex, so the element can be in focus
         
         this.yPosition = 0;
         this.updateLayout();
+
         
+        this.$el.mousedown( function () { this.focus(); } );
         
         this.resizeHandler = function( event ) { return self.onResize(event); };
         this.touchStartHandler = function( event ) { return self.onTouchStart(event); };
@@ -81,6 +84,8 @@
         this.$el.bind( "gesturestart", function( event ) { event.preventDefault(); return false;} );
         this.$el.bind( this.TOUCH_START, this.touchStartHandler );
         this.$el.bind( this.MOUSE_WHEEL, function( event ) { event.preventDefault();  return self.onMouseWheel(event); } );
+
+        $(window).bind( "keydown", function( event ) { return self.onKeydown(event); } );
         
         if ( !this.touchSupported) {
         	var sbWidth = parseInt(this.$scrollbar.css( "width" ), 10);
@@ -207,6 +212,48 @@
         return false;
     },
     
+    onKeydown: function ( event ) {
+        if ( !this.$el.is(':focus') ) return;
+
+        var delta = 0;
+        switch (event.which) {
+            case 33: delta = -1 * Math.floor(this.$el.height() / this.itemHeight); break;  // Page up
+            case 34: delta = Math.floor(this.$el.height() / this.itemHeight); break;       // Page down
+            case 38: delta = -1; break;                                                    // Up
+            case 40: delta = 1; break;                                                     // Down
+            default: return;
+        }
+
+        var oldindex = this.getSelectedIndex();
+        var index = oldindex + delta;
+        if (index > this.dataProvider.length -1) index = this.dataProvider.length;
+        if (index < 0) index = 0;
+
+        if (index == oldindex) return false;
+
+        this.setSelectedIndex(index);
+
+        if (this.yPosition > (index*this.itemHeight)) this.yPosition = (index*this.itemHeight);
+        if (this.yPosition < ((index+1)*this.itemHeight) - this.$el.height()) this.yPosition = ((index+1)*this.itemHeight) - this.$el.height();
+        
+        var self = this;
+        this.updateLayout();
+        this.cleanupTimeout = setTimeout( function(){ self.cleanupListItems(); }, 100 );
+
+        var target = this.$ul.find('.megalistSelected');
+
+        // Trigger the change
+        setTimeout( function() {
+                var data = { selectedIndex: index, 
+                             srcElement: $(target), 
+                             item: self.dataProvider[index]  };
+                var e = jQuery.Event("change", data);
+                self.$el.trigger( e );
+            }, 150 );
+
+        return false;
+    },
+
     onMouseWheel: function ( event ) {
         clearTimeout( this.cleanupTimeout );
     
