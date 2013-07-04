@@ -224,9 +224,12 @@
             default: return;
         }
 
-        var index = this.getSelectedIndex() + delta;
+        var oldindex = this.getSelectedIndex();
+        var index = oldindex + delta;
         if (index > this.dataProvider.length -1) index = this.dataProvider.length;
         if (index < 0) index = 0;
+
+        if (index == oldindex) return false;
 
         this.setSelectedIndex(index);
 
@@ -236,6 +239,17 @@
         var self = this;
         this.updateLayout();
         this.cleanupTimeout = setTimeout( function(){ self.cleanupListItems(); }, 100 );
+
+        var target = this.$ul.find('.megalistSelected');
+
+        // Trigger the change
+        setTimeout( function() {
+                var data = { selectedIndex: index, 
+                             srcElement: $(target), 
+                             item: self.dataProvider[index]  };
+                var e = jQuery.Event("change", data);
+                self.$el.trigger( e );
+            }, 150 );
 
         return false;
     },
