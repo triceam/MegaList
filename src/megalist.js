@@ -213,11 +213,16 @@
     },
     
     onKeydown: function ( event ) {
-
         if ( !this.$el.is(':focus') ) return;
-        if ( event.which != 38 && event.which != 40 ) return;
 
-        var delta = event.which == 40 ? 1 : -1;
+        var delta = 0;
+        switch (event.which) {
+            case 33: delta = -1 * Math.floor(this.$el.height() / this.itemHeight); break;  // Page up
+            case 34: delta = Math.floor(this.$el.height() / this.itemHeight); break;       // Page down
+            case 38: delta = -1; break;                                                    // Up
+            case 40: delta = 1; break;                                                     // Down
+            default: return;
+        }
 
         var index = this.getSelectedIndex() + delta;
         if (index > this.dataProvider.length -1) index = this.dataProvider.length;
