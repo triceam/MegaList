@@ -280,6 +280,7 @@
                     setTimeout( function() {
                             var data = { selectedIndex: index, 
                                          srcElement: $(target), 
+                                         originalEvent: event,
                                          item: self.dataProvider[index]  };
                             var e = jQuery.Event("change", data);
                             self.$el.trigger( e );
