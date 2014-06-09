@@ -269,17 +269,25 @@
                 }
                 
                 if ( triggerEvent ) {
-                    var index = $(target).attr( "list-index" );
-                    if (index === this.selectedIndex) { return false; }
+                    var self = this,
+                        index = $(target).attr( "list-index" );
+                    if (index === this.selectedIndex) {
+                      var data = { selectedIndex: index, 
+                                   srcElement: $(target), 
+                                   originalEvent: event,
+                                   item: self.dataProvider[index]  };
+                      var e = jQuery.Event("nochange", data);
+                      self.$el.trigger( e );
+                      return false; 
+                    }
                     this.setSelectedIndex( index );
-                
                     //make this asynch so that any "alert()" on a change event
                     //does not block the UI from updating the selected row
                     //this is particularly an issue on mobile devices
-                    var self = this;
                     setTimeout( function() {
                             var data = { selectedIndex: index, 
                                          srcElement: $(target), 
+                                         originalEvent: event,
                                          item: self.dataProvider[index]  };
                             var e = jQuery.Event("change", data);
                             self.$el.trigger( e );
